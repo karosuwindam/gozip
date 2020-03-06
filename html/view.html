@@ -21,7 +21,7 @@
     <script src="../js/comic-viewer.js"></script>
     
     <!-- sample -->
-    <link href="./css/custom.css" rel="stylesheet">
+    <link href="../css/custom.css" rel="stylesheet">
     
   </head>
   <body>
@@ -64,13 +64,13 @@
         </div>
 
         <!--<input id="comic-dir-large" type="hidden" name="dir-large" value="./images/large"><!-- large image path -->
-        <input id="comic-dir-large" type="hidden" name="dir-large" value="../zip?id=0&page="><!-- large image path -->
-        <input id="comic-dir-small" type="hidden" name="dir-small" value="../zip?id=0&page="><!-- small image path -->
+        <input id="comic-dir-large" type="hidden" name="dir-large" value="../zip?id=<%id%>&page="><!-- large image path -->
+        <input id="comic-dir-small" type="hidden" name="dir-small" value="../zip?id=<%id%>&page="><!-- small image path -->
         <!--<input id="comic-extension" type="hidden" name="extension" value="jpg"><!-- image extension -->
         <input id="comic-extension" type="hidden" name="extension" value=""><!-- image extension -->
-        <input id="comic-loading" type="hidden" name="loading" value="../images/loading.gif"><!-- loading image path -->
-        <input id="comic-page-count" type="hidden" name="count" value="130"><!-- page count -->
-        <input id="comic-page-start" type="hidden" name="start" value="1"><!-- l or r (l is left, r is right start) -->
+        <input id="comic-loading" type="hidden" name="loading" value="images/loading.gif"><!-- loading image path -->
+        <input id="comic-page-count" type="hidden" name="count" value="<%pagemax%>>"><!-- page count -->
+        <input id="comic-page-start" type="hidden" name="start" value="l"><!-- l or r (l is left, r is right start) -->
         <input id="comic-title" type="hidden" name="title" value="esper hunter"><!-- title -->
 
       </div>

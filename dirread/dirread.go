@@ -3,6 +3,7 @@ package dirread
 import (
 	"io/ioutil"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -45,8 +46,10 @@ func (t *Dirtype) Read(s string) int {
 		log.Fatal(err)
 	}
 	for _, f := range files {
-		tmp2 := filedata{s + f.Name(), f.IsDir(), f.Size(), f.ModTime(), t.path + s}
-		tmp = append(tmp, tmp2)
+		if strings.Index(f.Name(), ".zip") > 0 {
+			tmp2 := filedata{s + f.Name(), f.IsDir(), f.Size(), f.ModTime(), t.path + s}
+			tmp = append(tmp, tmp2)
+		}
 	}
 	t.Data = tmp
 	return 0

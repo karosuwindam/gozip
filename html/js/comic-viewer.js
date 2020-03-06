@@ -227,6 +227,59 @@ comic.spInit = function(windowWidth) {
 	$('img.lazyload').lazyload();
 };
 
+document.onkeydown = function(e) {
+    var keyCode = false;
+	var windowWidth = $(window).width();
+	if (windowWidth > 750) {
+ 
+    if (e) event = e;
+ 
+    if (event) {
+        if (event.keyCode) {
+            keyCode = event.keyCode;
+        } else if (event.which) {
+            keyCode = event.which;
+		}
+		
+    }
+	switch(keyCode){
+		case 37:		//<-
+		if (comic.isLeftClickable()) {
+			comic.param.no = comic.param.no + 2;
+			comic.showImage();
+			// comic.mouseLeave();
+			// comic.mouseEnterLeft();
+		}
+					break;
+		case 39:	//->
+		if (comic.isRightClickable()) {
+			comic.param.no = comic.param.no - 2;
+			comic.showImage();
+			// comic.mouseLeave();
+			// comic.mouseEnterRight();
+		}			break;
+		case 38:
+			if (comic.isLeftClickable()) {
+				comic.param.no = comic.param.no + 1;
+				comic.showImage();
+				// comic.mouseLeave();
+				// comic.mouseEnterLeft();
+			}
+			break;
+		case 40:
+			if (comic.isRightClickable()) {
+				comic.param.no = comic.param.no - 1;
+				comic.showImage();
+				// comic.mouseLeave();
+				// comic.mouseEnterRight();
+			}
+			break;	
+		default:
+			console.log(keyCode);
+			break;
+	}
+}
+};
 /** init */
 $(function() {
 	

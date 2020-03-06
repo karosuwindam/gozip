@@ -11,6 +11,8 @@ import (
 	"./zipopen"
 )
 
+const ZIPPATH = "../../../book"
+
 func Unzip(src, dest string) error {
 	r, err := zip.OpenReader(src)
 	if err != nil {
@@ -27,15 +29,15 @@ func Unzip(src, dest string) error {
 
 	return nil
 }
-func ziplist(w http.ResponseWriter, r *http.Request) {
+func zipdata(w http.ResponseWriter, r *http.Request) {
 	var t zipopen.File
 	var t_dir dirread.Dirtype
 	data := map[string]string{}
 	str := r.URL.RawQuery
-	data["id"] = "0"
-	data["page"] = "0"
-	num := 0
-	page := 0
+	data["id"] = "1"
+	data["page"] = "1"
+	num := 1
+	page := 1
 
 	if strings.Index(str, "&") > 0 {
 		for _, tmp := range strings.Split(str, "&") {
@@ -46,15 +48,19 @@ func ziplist(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
+	} else if strings.Index(str, "=") > 0 {
+		tmp2 := strings.Split(str, "=")
+		data[tmp2[0]] = tmp2[1]
+
 	}
 	num, _ = strconv.Atoi(data["id"])
 	page, _ = strconv.Atoi(data["page"])
-	t_dir.Setup("../../../book")
+	t_dir.Setup(ZIPPATH)
 	_ = t_dir.Read("/")
-	if num >= len(t_dir.Data) {
-		num = 0
+	if ((num - 1) >= len(t_dir.Data)) || (num == 0) {
+		num = 1
 	}
-	t.ZipOpenSetup(t_dir.Data[num].RootPath + t_dir.Data[num].Name)
+	t.ZipOpenSetup(t_dir.Data[num-1].RootPath + t_dir.Data[num-1].Name)
 	t.ZipReadList()
 	page--
 	if page >= t.Count {
@@ -62,9 +68,68 @@ func ziplist(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "%s", t.ZipRead(page))
 }
+func ziplist(w http.ResponseWriter, r *http.Request) {
+	var t zipopen.File
+	var t_dir dirread.Dirtype
+	str := ""
+	t_dir.Setup(ZIPPATH)
+	_ = t_dir.Read("/")
+	for _, r := range t_dir.Data {
+		str += r.RootPath + r.Name + ","
+		t.ZipOpenSetup(r.RootPath + r.Name)
+		t.ZipReadList()
+		str += strconv.Itoa(t.Count) + "\n"
+	}
+	fmt.Fprintf(w, "%v", str)
+}
+
+func view(w http.ResponseWriter, r *http.Request) {
+	var t zipopen.File
+	var t_dir dirread.Dirtype
+	var datap map[string]string
+	url := r.URL.Path
+	data := map[string]string{}
+	datap = data
+	data["id"] = "1"
+	id := 0
+	data["nowpage"] = "1"
+
+	t_dir.Setup(ZIPPATH)
+	_ = t_dir.Read("/")
+
+	i := 0
+	for _, str := range strings.Split(url[1:], "/") {
+		if (i == 1) && (str != "") {
+			tmp, _ := strconv.Atoi(str)
+			if tmp > 0 {
+				if len(t_dir.Data) >= tmp {
+					data["id"] = str
+					id = tmp - 1
+				}
+			}
+		}
+		if (i == 2) && (str != "") {
+			tmp, _ := strconv.Atoi(str)
+			if tmp > 0 {
+				data["nowpage"] = str
+			}
+		}
+		println(str)
+		i++
+	}
+	t.ZipOpenSetup(t_dir.Data[id].RootPath + t_dir.Data[id].Name)
+	t.ZipReadList()
+	data["pagemax"] = strconv.Itoa(t.Count)
+	output := ConvertData(ReadHtml("html/view.html"), datap)
+	fmt.Fprintf(w, output)
+	// fmt.Fprintf(w, "id=%vnowpage=%vpagemax=%v", data["id"], data["nowpage"], data["pagemax"])
+}
+
 func webstart() {
 	fmt.Println("web server start")
-	http.HandleFunc("/zip", ziplist)
+	http.HandleFunc("/zip", zipdata)
+	http.HandleFunc("/ziplist", ziplist)
+	http.HandleFunc("/view/", view)
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./html"))))
 	http.ListenAndServe(":8080", nil)
 }
