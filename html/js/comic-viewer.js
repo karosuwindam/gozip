@@ -20,6 +20,7 @@ comic.param = {
 	leftPage : null, 
 	rightButton : null, 
 	leftButton : null, 
+	fullscreen : 0,
 	info : null
 };
 
@@ -28,7 +29,12 @@ comic.viewerResize = function() {
 	var windowHeight = $(window).height();
 	var headerHeight = $('#header-comic').outerHeight(true);
 	var footerHeight = $('#footer-comic').outerHeight(true);
-	var contentsHeight = windowHeight - headerHeight - footerHeight;
+	if (comic.param.fullscreen == 0){
+		var contentsHeight = windowHeight - headerHeight - footerHeight;
+	}else{
+		var contentsHeight = windowHeight;
+		headerHeight = 0;
+	}
 	$('#comic-viewer').css('height', contentsHeight + 'px').css('margin-top', headerHeight + 'px');
 	
 	// move page button
@@ -274,6 +280,20 @@ document.onkeydown = function(e) {
 				// comic.mouseEnterRight();
 			}
 			break;	
+		case 70:		//f
+		// case 122:		//F11
+			if (comic.param.fullscreen == 0){
+				comic.param.fullscreen = 1;
+				$('#header-comic')[0].style.display = "none"
+				$('#footer-comic')[0].style.display = "none"
+			}else{
+				comic.param.fullscreen = 0;
+				$('#header-comic')[0].style.display = ""
+				$('#footer-comic')[0].style.display = ""
+			}
+			// console.log(keyCode);
+			comic.viewerResize();
+			break;
 		default:
 			console.log(keyCode);
 			break;

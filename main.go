@@ -119,7 +119,9 @@ func view(w http.ResponseWriter, r *http.Request) {
 	}
 	t.ZipOpenSetup(t_dir.Data[id].RootPath + t_dir.Data[id].Name)
 	t.ZipReadList()
+	data["title"] = t_dir.Data[id].Name[1:]
 	data["pagemax"] = strconv.Itoa(t.Count)
+	// output := ConvertData(ReadHtml("html/comic/view.html"), datap)
 	output := ConvertData(ReadHtml("html/view.html"), datap)
 	fmt.Fprintf(w, output)
 	// fmt.Fprintf(w, "id=%vnowpage=%vpagemax=%v", data["id"], data["nowpage"], data["pagemax"])
