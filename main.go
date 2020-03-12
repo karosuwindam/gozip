@@ -13,6 +13,14 @@ import (
 
 const ZIPPATH = "../../../book"
 
+// const ZIPPATH = "/var/www/html/nextcloud/data/karosu/files/book"
+
+type ZiplistName struct {
+	No   int    `json:"no"`
+	Name string `json:"name"`
+	Size int    `json:"size"`
+}
+
 func Unzip(src, dest string) error {
 	r, err := zip.OpenReader(src)
 	if err != nil {
@@ -68,18 +76,47 @@ func zipdata(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "%s", t.ZipRead(page))
 }
+
 func ziplist(w http.ResponseWriter, r *http.Request) {
 	var t zipopen.File
 	var t_dir dirread.Dirtype
+	json_tmp := []ZiplistName{}
+	tmp := ZiplistName{}
+	tmp.No = 1
+
 	str := ""
+	str = "[\n"
 	t_dir.Setup(ZIPPATH)
 	_ = t_dir.Read("/")
 	for _, r := range t_dir.Data {
-		str += r.RootPath + r.Name + ","
-		t.ZipOpenSetup(r.RootPath + r.Name)
-		t.ZipReadList()
-		str += strconv.Itoa(t.Count) + "\n"
+		// str += r.RootPath + r.Name + ","
+		// t.ZipOpenSetup(r.RootPath + r.Name)
+		// t.ZipReadList()
+		// str += strconv.Itoa(t.Count) + "\n"
+		if tmp.No == 1 {
+			str += "{\"id\":" + strconv.Itoa(tmp.No)
+			str += ",\"name\":\"" + r.Name + "\""
+			str += ",\"size\":" + strconv.Itoa(t.Count)
+			str += "}"
+		} else {
+			str += ",\n{\"id\":" + strconv.Itoa(tmp.No)
+			str += ",\"name\":\"" + r.Name + "\""
+			str += ",\"size\":" + strconv.Itoa(t.Count)
+			str += "}"
+		}
+		tmp.Name = r.Name
+		tmp.Size = t.Count
+		json_tmp = append(json_tmp, tmp)
+		tmp.No++
 	}
+	str += "\n]"
+	// _, _ := json.Marshal(json_tmp)
+	// fmt.Println(json_tmp)
+	// jsonBytes, err := json.Marshal(json_tmp)
+	// if err != nil {
+	// 	fmt.Println("JSON Marshal error:", err)
+	// 	return
+	// }
 	fmt.Fprintf(w, "%v", str)
 }
 
@@ -138,12 +175,12 @@ func webstart() {
 
 func main() {
 	// err := Unzip("../../../book/[大森藤ノ]ファミリアクロニクル_フレイヤ.zip", "./out")
-	var t zipopen.File
-	var t_dir dirread.Dirtype
-	t_dir.Setup("../../../book")
-	_ = t_dir.Read("/")
-	t.ZipOpenSetup(t_dir.Data[0].RootPath + t_dir.Data[0].Name)
-	t.ZipReadList()
+	// var t zipopen.File
+	// var t_dir dirread.Dirtype
+	// t_dir.Setup("../../../book")
+	// _ = t_dir.Read("/")
+	// t.ZipOpenSetup(t_dir.Data[0].RootPath + t_dir.Data[0].Name)
+	// t.ZipReadList()
 	// fmt.Println(t.ZipRead(0))
 
 	webstart()

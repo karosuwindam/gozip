@@ -1,4 +1,4 @@
-# zipをWebからみる
+# zipファイル内の画像をWebからみる
 
 
 漫画ビューアの部分は下記の物をベースに改造
@@ -14,7 +14,7 @@ https://github.com/tomalatte001/comic-viewer
 
 # 使い方
 
-http://localhost:8080/view/1 にアクセスすると表示されます
+http://localhost:8080/ にアクセスするとリンクリストが表示されます。
 
 # APIとか
 
@@ -40,3 +40,5 @@ $$ view
 |id|zipフォルダの指定番号|
 |page|指定現在データ番号|
 
+# 使い方
+ZIPPATHでzipファイルの対象フォルダを指定してください
