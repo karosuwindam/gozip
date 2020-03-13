@@ -80,7 +80,8 @@ comic.showImage = function() {
 	var loadingPath = this.param.loading;
 	var rightPath = this.getImgPath(this.param.dir, this.param.extension, this.param.no, this.param.count);
 	var leftPath = this.getImgPath(this.param.dir, this.param.extension, this.param.no + 1, this.param.count);
-	
+	var next_leftPath = this.getImgPath(this.param.dir, this.param.extension, this.param.no + 2, this.param.count);
+	var next_rightPath = this.getImgPath(this.param.dir, this.param.extension, this.param.no + 3, this.param.count);
 	if (rightPath == null) {
 		this.param.rightPage.hide();
 	} else {
@@ -158,8 +159,15 @@ comic.pcInit = function() {
 	comic.param.rightButton = $('#comic-right-button');
 	comic.param.leftButton = $('#comic-left-button');
 	comic.param.info = $('#comic-info');
-	comic.param.no = (comic.param.start == 'l') ? 0 : 1;
-	
+	comic.param.no = $('#comic-nowpage').val()-0;
+	if (comic.param.count < comic.param.no){
+		comic.param.no = comic.param.count-1;
+
+	}
+	// comic.param.no = (comic.param.start == 'l') ? 0 : 1;
+	if (comic.param.no == 1){
+		comic.param.no = (comic.param.start == 'l') ? 0 : 1;
+	}
 	$('#comic-info-title').html($('#comic-title').val());
 	$('#comic-page-all').html(comic.param.count);
 
