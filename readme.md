@@ -18,7 +18,7 @@ http://localhost:8080/ にアクセスするとリンクリストが表示され
 
 # APIとか
 
-$$ view
+## view
 ./id/page
 
 |記号|説明|
