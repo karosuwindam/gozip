@@ -8,12 +8,15 @@ import (
 	"strings"
 
 	"./dirread"
+	"./logoutput"
 	"./zipopen"
 )
 
-const ZIPPATH = "../../../book"
+// const ZIPPATH = "../../../book"
 
-// const ZIPPATH = "/var/www/html/nextcloud/data/karosu/files/book"
+const ZIPPATH = "/var/www/html/nextcloud/data/karosu/files/book"
+
+var Logdata logoutput.Data
 
 type ZiplistName struct {
 	No   int    `json:"no"`
@@ -43,9 +46,9 @@ func zipdata(w http.ResponseWriter, r *http.Request) {
 	data := map[string]string{}
 	str := r.URL.RawQuery
 	data["id"] = "1"
-	data["page"] = "1"
+	data["page"] = "0"
 	num := 1
-	page := 1
+	page := 0
 
 	if strings.Index(str, "&") > 0 {
 		for _, tmp := range strings.Split(str, "&") {
@@ -70,7 +73,7 @@ func zipdata(w http.ResponseWriter, r *http.Request) {
 	}
 	t.ZipOpenSetup(t_dir.Data[num-1].RootPath + t_dir.Data[num-1].Name)
 	t.ZipReadList()
-	page--
+	// page--
 	if page >= t.Count {
 		page = 0
 	}
@@ -90,8 +93,8 @@ func ziplist(w http.ResponseWriter, r *http.Request) {
 	_ = t_dir.Read("/")
 	for _, r := range t_dir.Data {
 		// str += r.RootPath + r.Name + ","
-		// t.ZipOpenSetup(r.RootPath + r.Name)
-		// t.ZipReadList()
+		t.ZipOpenSetup(r.RootPath + r.Name)
+		t.ZipReadList()
 		// str += strconv.Itoa(t.Count) + "\n"
 		if tmp.No == 1 {
 			str += "{\"id\":" + strconv.Itoa(tmp.No)
@@ -129,7 +132,7 @@ func view(w http.ResponseWriter, r *http.Request) {
 	datap = data
 	data["id"] = "1"
 	id := 0
-	data["nowpage"] = "1"
+	data["nowpage"] = "0"
 
 	t_dir.Setup(ZIPPATH)
 	_ = t_dir.Read("/")
@@ -165,7 +168,8 @@ func view(w http.ResponseWriter, r *http.Request) {
 }
 
 func webstart() {
-	fmt.Println("web server start")
+	// fmt.Println("web server start")
+	Logdata.Out(1, "web server start %v:%v", "", "8080")
 	http.HandleFunc("/zip", zipdata)
 	http.HandleFunc("/ziplist", ziplist)
 	http.HandleFunc("/view/", view)
@@ -174,6 +178,7 @@ func webstart() {
 }
 
 func main() {
+	Logdata.Setup("output.log")
 	// err := Unzip("../../../book/[大森藤ノ]ファミリアクロニクル_フレイヤ.zip", "./out")
 	// var t zipopen.File
 	// var t_dir dirread.Dirtype

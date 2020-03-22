@@ -1,88 +1,111 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <!-- meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/css/comic.css">
+        <script type="text/javascript" src="/javascript/comic.js"></script>
+        <script type="text/javascript" src="/javascript/comic-botton.js"></script>
+        <script>
+            //url = filepass + filename + i + filetype
+            pagemax = 5-1;
+            pagemax = 196-1;
+            pagemax = <%pagemax%>-1;
+            filepass = "img/";       //ファイルパス
+            filepass = "http://bookserver:3000//filelists/send_img?id="+224+"&page=";       //ファイルパス
+            filepass = "/zip?id=<%id%>&page="
+            filename = "";           //ファイルネーム
+            filetype = ".jpg";       //ファイル拡張子
+            filetype = "";       //ファイル拡張子
+            pagenow = <%nowpage%>;
+            mouseover_f = false;
+        </script>
+        <title>comic view</title>
+    </head>
+    <body>
+        <div class="pageI0" id="page0_0" style="display: none;"><img id="pagei0_0" class="page0" src="/img/blank.jpg" alt=""></div>
+        <div class="pageI0" id ="page0_1" style="display: '';"><img id="pagei0_1" class="page0" src="/img/0.jpg" alt=""></div>
+        <div class="pageI0" id="page0_2" style="display: none;"><img id="pagei0_2" class="page0" src="/img/2.jpg" alt=""></div>
+        <div class="pageI1" id ="page1_0" style="display: none;"><img id="pagei1_0" class="page1" src="/img/blank.jpg" alt=""></div>
+        <div class="pageI1" id ="page1_1" style="display: '';"><img id="pagei1_1" class="page1" src="/img/1.jpg" alt=""></div>
+        <div class="pageI1" id ="page1_2" style="display: none;"><img id="pagei1_2" class="page3" src="/img/blank.jpg" alt=""></div>
 
-    <!-- title -->
-    <title>comic-viewer sample</title>
 
-    <!-- css -->
-    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-    <link href="/css/comic-viewer.css" rel="stylesheet">
-
-    <!-- js -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/js/jquery.lazyload.js"></script>
-    <script src="/js/comic-viewer.js"></script>
-    
-    <!-- sample -->
-    <link href="/css/custom.css" rel="stylesheet">
-    
-  </head>
-  <body>
-    <div class="wrapper">
-      <!-- header -->
-      <div id="header-comic" class="header-comic">
-        <div class="inner">
-          <!-- logo -->
-          <div class="logo">
-            <h1><a href="/"><%title%></a></h1>
-          </div>
-
-          <!-- navi -->
-          <div class="navi">
-            <div class="link"><a href="/" >home</a></div>
-          </div>
+        <div class="help" style="display: '';">
+            <p class="title">Help</p>
+            <p class="text">本ブラウザはキーボード操作に対応しています。操作方法以下に示す通りです。</p>
+            <table>
+                <caption>キーボード操作方法について</caption>
+                <tr>
+                    <th>Key</th>
+                    <th>説明</th>
+                </tr><tr>
+                    <td>h</td>
+                    <td>ヘルプの表示非表示</td>
+                </tr><tr>
+                    <td>i</td>
+                    <td>info dataの表示非表示</td>
+                </tr><tr>
+                    <td>m</td>
+                    <td>マウスオーバー時の表示非表示</td>
+                </tr><tr>
+                    <td>p</td>
+                    <td>現在のページ表示非表示</td>
+                </tr><tr>
+                    <td>←</td>
+                    <td>2page 進む</td>
+                </tr><tr>
+                    <td>→</td>
+                    <td>2page 戻る</td>
+                </tr><tr>
+                    <td>↑</td>
+                    <td>1page 進む</td>
+                </tr><tr>
+                    <td>↓</td>
+                    <td>1page 戻る</td>
+                </tr><tr>
+                    <td>space</td>
+                    <td>1page/2page 切り替え</td>
+                </tr>
+            </table>
         </div>
-      </div>
+        <div class="nowpage" style="display: '';">1/<script>document.write(pagemax+1)</script> page</div>
+        <!---->
+        <div class="leftT" name="clickA" onclick="onclickevent(lefte[0])" onmouseover="mouseover(lefte[0],'leftT');" onmouseout="mouseout(lefte[0],'leftT');"></div>
+        <div class="midT" name="clickA" onclick="onclickevent(mide[0])" onmouseover="mouseover(mide[0],'midT');" onmouseout="mouseout(mide[0],'midT');"></div>
+        <div class="midM" name="clickA" onclick="onclickevent(mide[1])" onmouseover="mouseover(mide[1],'midM');" onmouseout="mouseout(mide[1],'midM');"></div>
+        <div class="midB" name="clickA" onclick="onclickevent(mide[2])" onmouseover="mouseover(mide[2],'midB');" onmouseout="mouseout(mide[2],'midB');"></div>
+        <div class="rightT" name="clickA" onclick="onclickevent(righte[0])"  onmouseover="mouseover(righte[0],'rightT');" onmouseout="mouseout(righte[0],'rightT');"></div>
 
-      <!-- contents -->
-      <div class="contents">
-        <div id="comic-info">
-          <div class="detail">
-            <span id="comic-info-title"></span>
-            <span id="comic-page-no"></span>/<span id="comic-page-all"></span>
-          </div>
+        <div class="listdata" id="listl" style="display: none;">
         </div>
-        <div id="comic-viewer" style="display:none;">
-          <div id="comic-left" class="page">
-            <i id="comic-left-button" class="fas fa-arrow-circle-left move-button"></i>
-            <img id="comic-left-page" class="img" src="/images/loading.gif">
-          </div>
-          <div id="comic-right" class="page">
-            <i id="comic-right-button" class="fas fa-arrow-circle-right move-button"></i>
-            <img id="comic-right-page" class="img" src="/images/loading.gif">
-          </div>
+        <a class="button" id="list" href=javascript:void(0); onclick="listonoff();return false" style="float:left">list</a>
+        <div class="sidber" style="display: ;">
+            <input class="sidber" id="pageslider" type="range" value="0" min="0" max="10" step="1"
+            onchange="changeValue(this.value)"
+            oninput="oninputvalue(this.value)">
+            <div class="page_tmp" id="view_tmp_page" style="color: white;">0</div>
+            <script>
+                function oninputvalue(value){
+                    var page = document.getElementById('view_tmp_page');
+                    var tmp = value -0;
+                    page.style.display = "";
+                    page.innerHTML = tmp +1;
+                }
+                function changeValue(value) {
+                    var page = document.getElementById('view_tmp_page');
+                    page.style.display = "none";
+                    loaddata = (value==0);
+                    nowpage(value);
+                }
+                var slider = document.getElementById("pageslider");
+                slider.max = pagemax;
+                changeValue(pagenow);
+            </script>
         </div>
-
-        <div id="comic-viewer-sp" style="display:none;">
+        <div class="output" style="display: none;">
+            tmp
         </div>
-
-        <!--<input id="comic-dir-large" type="hidden" name="dir-large" value="./images/large"><!-- large image path -->
-        <input id="comic-dir-large" type="hidden" name="dir-large" value="/zip?id=<%id%>&page="><!-- large image path -->
-        <input id="comic-dir-small" type="hidden" name="dir-small" value="/zip?id=<%id%>&page="><!-- small image path -->
-        <!--<input id="comic-extension" type="hidden" name="extension" value="jpg"><!-- image extension -->
-        <input id="comic-extension" type="hidden" name="extension" value=""><!-- image extension -->
-        <input id="comic-loading" type="hidden" name="loading" value="images/loading.gif"><!-- loading image path -->
-        <input id="comic-page-count" type="hidden" name="count" value="<%pagemax%>>"><!-- page count -->
-        <input id="comic-page-start" type="hidden" name="start" value="l"><!-- l or r (l is left, r is right start) -->
-        <input id="comic-title" type="hidden" name="title" value="esper hunter"><!-- title -->
-        <input id="comic-nowpage" type="hidden" name="nowpate" value="<%nowpage%>">
-
-      </div>
-      <!-- /contents -->
-
-      <!-- footer -->
-      <div id="footer-comic">
-         <p>2018- &copy; tomalatte All Rights Reserved.</p>
-      </div>
-      <!-- /footer -->
-
-    </div>
-  </body>
+        <script>
+            listdatawrite();
+            getlist();
+        </script>
+    </body>
 </html>
